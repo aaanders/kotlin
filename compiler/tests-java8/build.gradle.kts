@@ -16,7 +16,7 @@ sourceSets {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jdkHome = rootProject.extra["JDK_18"]!!.toString()
+    kotlinOptions.jdkHome = rootProject.extra["JDK_9"]!!.toString()
     kotlinOptions.jvmTarget = "1.8"
 }
 
