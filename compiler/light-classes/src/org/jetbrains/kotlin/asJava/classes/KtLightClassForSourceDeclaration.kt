@@ -341,7 +341,7 @@ abstract class KtLightClassForSourceDeclaration(protected val classOrObject: KtC
                 }
 
         fun createNoCache(classOrObject: KtClassOrObject): KtLightClassForSourceDeclaration? {
-            if (classOrObject.parentsWithSelf.filterIsInstance<KtClass>().any { it.hasExpectModifier() }) {
+            if (classOrObject.parentsWithSelf.filterIsInstance<KtClassOrObject>().any { it.hasExpectModifier() }) {
                 return null
             }
 
