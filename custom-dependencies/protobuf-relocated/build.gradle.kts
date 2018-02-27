@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import java.io.File
 
 val baseProtobuf by configurations.creating
 val baseProtobufSources by configurations.creating
@@ -12,6 +13,8 @@ val protobufJarPrefix = "protobuf-$protobufVersion"
 val renamedSources = "$buildDir/renamedSrc/"
 val outputJarsPath = "$buildDir/libs"
 val artifactBaseName = "protobuf-java-relocated"
+
+val jpsLibraryPath by extra(File(outputJarsPath, artifactBaseName + protobufVersion + ".jar"))
 
 dependencies {
     baseProtobuf("com.google.protobuf:protobuf-java:$protobufVersion")
