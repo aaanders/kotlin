@@ -177,16 +177,14 @@ class StubClassBuilder(
         }
         super.done()
     }
+}
 
-    companion object {
-        private val EMPTY_STRATEGY = object : InnerClassSourceStrategy<Any> {
-            override fun findInnerClass(s: String, o: Any): Any? {
-                return null
-            }
+private val EMPTY_STRATEGY = object : InnerClassSourceStrategy<Any> {
+    override fun findInnerClass(s: String?, o: Any?): Any? {
+        return null
+    }
 
-            override fun accept(innerClass: Any, visitor: StubBuildingVisitor<Any>) {
-                throw UnsupportedOperationException("Shall not be called!")
-            }
-        }
+    override fun accept(innerClass: Any, visitor: StubBuildingVisitor<Any>) {
+        throw UnsupportedOperationException("Shall not be called!")
     }
 }
