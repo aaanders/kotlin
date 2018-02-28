@@ -248,10 +248,7 @@ class KotlinLanguageInjector(
         val argument = ktHost.parent as? KtValueArgument ?: return null
 
         val callExpression = PsiTreeUtil.getParentOfType(ktHost, KtCallElement::class.java) ?: return null
-        var callee = callExpression.calleeExpression ?: return null
-
-        if (callee is KtConstructorCalleeExpression)
-            callee = callee.constructorReferenceExpression ?: return null
+        val callee = unwrapReferenceExpression(callExpression.calleeExpression ?: return null)
 
         if (isAnalyzeOff()) return null
 
@@ -276,18 +273,19 @@ class KotlinLanguageInjector(
         return null
     }
 
+    private fun unwrapReferenceExpression(callee: KtExpression): KtExpression {
+        if (callee is KtConstructorCalleeExpression)
+            return callee.constructorReferenceExpression ?: return callee
+        return callee
+    }
+
     private fun injectInAnnotationCall(host: KtElement): InjectionInfo? {
         if (!annotationInjectionsEnabled) return null
         val argument = host.parent as? KtValueArgument ?: return null
         val annotationEntry = argument.parent.parent as? KtCallElement ?: return null
         if (!fastCheckInjectionsExists(annotationEntry)) return null
         val calleeExpression = annotationEntry.calleeExpression ?: return null
-        val calleeReference = when (calleeExpression) {
-            is KtConstructorCalleeExpression -> calleeExpression.constructorReferenceExpression?.mainReference // for top annotations
-            is KtNameReferenceExpression -> calleeExpression.mainReference // for nested annotations
-            else -> return null
-        }
-        val callee = calleeReference?.resolve()
+        val callee = unwrapReferenceExpression(calleeExpression).mainReference?.resolve()
         when (callee) {
             is PsiClass -> {
                 val psiClass = callee as? PsiClass ?: return null
